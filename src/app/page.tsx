@@ -17,12 +17,12 @@ export default async function Home() {
   }
   return (
     <>
-      <div className="text-5xl absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-10">
-        <Card>
+      <div className="text-xl md:text-5xl absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-10">
+        <Card className="w-[300px] md:w-[800px]">
           <CardHeader>
             <CardTitle>Welcome to TopicTest</CardTitle>
 
-            <CardDescription className="pt-10 text-2xl">
+            <CardDescription className="pt-5 md:pt-10 md:tracking-tight text-sm md:text-2xl">
               {" "}
               Your passport to a world of engaging, AI-generated quizzes on any
               subject you can think of! If you're a student seeking to expand
