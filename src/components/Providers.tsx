@@ -15,7 +15,7 @@ type Props = {
 const Providers = ({ children, ...props }: ThemeProviderProps) => {
   return (
     <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-      <SessionProvider>{children}</SessionProvider>;
+      <SessionProvider>{children}</SessionProvider>
     </NextThemesProvider>
   );
 };
