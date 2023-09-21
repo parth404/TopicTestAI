@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
+import CustomWordCloud from "../CustomWordCloud";
 // import WordCloud from "../WordCloud";
 // import { prisma } from "@/lib/db";
 
@@ -27,8 +28,7 @@ const TrendingTopicsCard = (props: Props) => {
         <TrendingUp size={28} strokeWidth={2.5} />
       </CardHeader>
       <CardContent className="pl-2">
-        word cloud
-        {/* <WordCloud formattedTopics={formattedTopics} /> */}
+        <CustomWordCloud />
       </CardContent>
     </Card>
   );
