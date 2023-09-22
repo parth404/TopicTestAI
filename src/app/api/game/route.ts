@@ -67,18 +67,27 @@ export async function POST(req: Request, res: Response) {
         question: string;
         answer: string;
       };
+      let manyData = data.questions.map((question: openQuestion) => {
+        return {
+          question: question.question,
+          answer: question.answer,
+          gameId: game.id,
+          questionType: "open_ended",
+        };
+      });
+
       await prisma.question.createMany({
-        data: data.questions.map((question: openQuestion) => {
-          return {
-            question: question.question,
-            answer: question.answer,
-            gameId: game.id,
-            questionType: "open_ended",
-          };
-        }),
+        data: manyData,
       });
     }
-    return NextResponse.json({ gameId: game.id }, { status: 200 });
+    return NextResponse.json(
+      {
+        gameId: game.id,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
