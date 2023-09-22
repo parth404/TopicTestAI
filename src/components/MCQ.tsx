@@ -1,6 +1,7 @@
 "use client";
 
 import { Game, Question } from "@prisma/client";
+import { differenceInSeconds } from "date-fns";
 import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
 import React from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -12,7 +13,7 @@ import { checkAnswerSchema } from "@/schemas/form/test";
 import { z } from "zod";
 import { useToast } from "./ui/use-toast";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, formatTimeDelta } from "@/lib/utils";
 
 type Props = {
   game: Game & { questions: Pick<Question, "id" | "options" | "question">[] };
@@ -41,6 +42,17 @@ const MCQ = ({ game }: Props) => {
   }, [currentQuestion]);
 
   const { toast } = useToast();
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (!hasEnded) {
+        setNow(new Date());
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [hasEnded]);
 
   const { mutate: checkAnswer, isLoading: isChecking } = useMutation({
     mutationFn: async () => {
@@ -104,8 +116,9 @@ const MCQ = ({ game }: Props) => {
   if (hasEnded) {
     return (
       <div className="absolute flex flex-col justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="px-4 mt-2 font-semibold text-white bg-lime-500 rounded-md whitespace-nowrap">
-          you completed in {"3m 4s"}
+        <div className="px-4 mt-2 font-semibold text-white bg-lime-600 rounded-md whitespace-nowrap">
+          you completed in{" "}
+          {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
           href={`/statistics/${game.id}`}
@@ -131,7 +144,7 @@ const MCQ = ({ game }: Props) => {
           </p>
           <div className="flex self-start mt-3 text-slate-400">
             <Timer className="mr-2" />
-            <span>00:00</span>
+            {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
           </div>
           <MCQCounter
             correct_answers={correctAnswers}
