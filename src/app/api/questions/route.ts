@@ -2,20 +2,20 @@ import { NextResponse } from "next/server";
 import { testCreationSchema } from "@/schemas/form/test";
 import { ZodError } from "zod";
 import { strict_output } from "@/lib/gpt";
-import { getAuthSession } from "@/lib/nextauth";
+// import { getAuthSession } from "@/lib/nextauth";
 
 // POST /api/questions
 export const POST = async (req: Request, res: Response) => {
   try {
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return NextResponse.json(
-        {
-          error: "You must be logged in to create a quiz",
-        },
-        { status: 401 }
-      );
-    }
+    // const session = await getAuthSession();
+    // if (!session?.user) {
+    //   return NextResponse.json(
+    //     {
+    //       error: "You must be logged in to create a quiz",
+    //     },
+    //     { status: 401 }
+    //   );
+    // }
     const body = await req.json();
     const { amount, topic, type } = testCreationSchema.parse(body);
     let questions: any;
@@ -47,7 +47,7 @@ export const POST = async (req: Request, res: Response) => {
     }
     return NextResponse.json(
       {
-        questions,
+        questions: questions,
       },
       { status: 200 }
     );
@@ -59,6 +59,14 @@ export const POST = async (req: Request, res: Response) => {
         },
         {
           status: 400,
+        }
+      );
+    } else {
+      console.error("elle gpt error", error);
+      return NextResponse.json(
+        { error: "An unexpected error occurred." },
+        {
+          status: 500,
         }
       );
     }
