@@ -14,6 +14,7 @@ import { z } from "zod";
 import { useToast } from "./ui/use-toast";
 import Link from "next/link";
 import { cn, formatTimeDelta } from "@/lib/utils";
+import { endGameSchema } from "@/schemas/form/questions";
 
 type Props = {
   game: Game & { questions: Pick<Question, "id" | "options" | "question">[] };
@@ -24,16 +25,22 @@ const MCQ = ({ game }: Props) => {
   const [hasEnded, setHasEnded] = React.useState(false);
   const [correctAnswers, setCorrectAnswers] = React.useState(0);
   const [wrongAnswers, setWrongAnswers] = React.useState(0);
-  // const [stats, setStats] = React.useState({
-  //   correct_answers: 0,
-  //   wrong_answers: 0,
-  // });
   const [selectedChoice, setSelectedChoice] = React.useState<number>(0);
   const [now, setNow] = React.useState(new Date());
 
   const currentQuestion = React.useMemo(() => {
     return game.questions[questionIndex];
   }, [questionIndex, game.questions]);
+
+  const { mutate: endGame } = useMutation({
+    mutationFn: async () => {
+      const payload: z.infer<typeof endGameSchema> = {
+        gameId: game.id,
+      };
+      const response = await axios.post(`/api/endGame`, payload);
+      return response.data;
+    },
+  });
 
   const options = React.useMemo(() => {
     if (!currentQuestion) return [];
@@ -86,9 +93,11 @@ const MCQ = ({ game }: Props) => {
         }
         if (questionIndex === game.questions.length - 1) {
           setHasEnded(true);
+          endGame();
           return;
         }
         setQuestionIndex((prev) => prev + 1);
+        setSelectedChoice(0);
       },
     });
   }, [checkAnswer, toast, isChecking, questionIndex, game.questions.length]);
@@ -117,7 +126,7 @@ const MCQ = ({ game }: Props) => {
     return (
       <div className="absolute flex flex-col justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="px-4 mt-2 font-semibold text-white bg-lime-600 rounded-md whitespace-nowrap">
-          you completed in{" "}
+          you completed in {/* @ts-expect-error */}
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
@@ -144,6 +153,7 @@ const MCQ = ({ game }: Props) => {
           </p>
           <div className="flex self-start mt-3 text-slate-400">
             <Timer className="mr-2" />
+            {/* @ts-expect-error */}
             {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
           </div>
           <MCQCounter

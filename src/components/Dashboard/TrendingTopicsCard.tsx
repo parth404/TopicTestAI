@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import CustomWordCloud from "../CustomWordCloud";
-// import WordCloud from "../WordCloud";
 import { prisma } from "@/lib/db";
 
 type Props = {};
