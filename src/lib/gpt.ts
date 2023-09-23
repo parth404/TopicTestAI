@@ -7,6 +7,28 @@ interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
 }
 
+function convertToJSONArray(input: string): string {
+  // Split the input string by '}' to separate the objects
+  const objectStrings = input.trim().split("}\n");
+  const jsonArray: any[] = [];
+
+  for (const objectString of objectStrings) {
+    if (objectString.trim() === "") {
+      continue; // Skip empty lines
+    }
+
+    // Add '}' back to the end of each object string and parse it as JSON
+    try {
+      const jsonObject = JSON.parse(objectString + "}");
+      jsonArray.push(jsonObject);
+    } catch (error: any) {
+      console.error(`Error parsing JSON: ${error.message}`);
+    }
+  }
+
+  return JSON.stringify(jsonArray, null, 2);
+}
+
 export async function strict_output(
   system_prompt: string,
   user_prompt: string | string[],
@@ -72,6 +94,13 @@ export async function strict_output(
 
     // ensure that we don't replace away apostrophes in text
     res = res.replace(/(\w)"(\w)/g, "$1'$2");
+
+    // check if response is valid json
+    try {
+      JSON.parse(res); // It's already valid JSON, return as is
+    } catch (error) {
+      res = convertToJSONArray(res);
+    }
 
     if (verbose) {
       console.log(

@@ -10,8 +10,8 @@ import Link from "next/link";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 import { History } from "lucide-react";
-// import HistoryComponent from "../HistoryComponent";
-// import { prisma } from "@/lib/db";
+import HistoryComponent from "../HistoryComponent";
+import { prisma } from "@/lib/db";
 type Props = {};
 
 const RecentCard = async (props: Props) => {
@@ -19,11 +19,11 @@ const RecentCard = async (props: Props) => {
   if (!session?.user) {
     return redirect("/");
   }
-  // const games_count = await prisma.game.count({
-  //   where: {
-  //     userId: session.user.id,
-  //   },
-  // });
+  const games_count = await prisma.game.count({
+    where: {
+      userId: session.user.id,
+    },
+  });
   return (
     <Card className="col-span-4 lg:col-span-3">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -33,8 +33,10 @@ const RecentCard = async (props: Props) => {
         <History size={28} strokeWidth={2.5} />
       </CardHeader>
       <CardContent className="max-h-[580px] overflow-auto">
-        <CardDescription>You have played a total of 7 quizzes.</CardDescription>
-        {/* <HistoryComponent limit={10} userId={session.user.id} /> */}
+        <CardDescription className="pb-2">
+          You have played a total of {games_count} quizzes.
+        </CardDescription>
+        <HistoryComponent limit={10} userId={session.user.id} />
       </CardContent>
     </Card>
   );

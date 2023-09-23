@@ -2,6 +2,7 @@ import RecentCard from "@/components/Dashboard/RecentCard";
 import TestHistoryCard from "@/components/Dashboard/TestHistoryCard";
 import TopicTestCard from "@/components/Dashboard/TopicTestCard";
 import TrendingTopicsCard from "@/components/Dashboard/TrendingTopicsCard";
+import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -17,6 +18,7 @@ const Dashboard = async (props: Props) => {
   if (!session?.user) {
     return redirect("/");
   }
+
   return (
     <main className="p-8 mx-auto max-w-7xl">
       <div className="flex items-center">

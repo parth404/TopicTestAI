@@ -13,7 +13,7 @@ export async function POST(req: Request, res: Response) {
     if (!session?.user) {
       return NextResponse.json(
         {
-          error: "You must be logged in to create a quiz",
+          error: "You must be logged in to create a Test",
         },
         { status: 401 }
       );
@@ -29,6 +29,21 @@ export async function POST(req: Request, res: Response) {
         topic,
       },
     });
+    await prisma.topic_count.upsert({
+      where: {
+        topic,
+      },
+      create: {
+        topic,
+        count: 1,
+      },
+      update: {
+        count: {
+          increment: 1,
+        },
+      },
+    });
+
     const { data } = await axios.post(`${process.env.API_URL}/api/questions`, {
       amount,
       topic,

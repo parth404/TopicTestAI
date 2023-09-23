@@ -18,7 +18,7 @@ const BlankAnswerInput = ({ answer, setBlankAnswer }: Props) => {
     });
     // mix the keywords and pick 2
     const shuffled = words.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 2);
+    return shuffled.slice(0, 6);
   }, [answer]);
 
   const answerWithBlanks = React.useMemo(() => {

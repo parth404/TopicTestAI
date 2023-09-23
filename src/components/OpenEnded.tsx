@@ -52,7 +52,9 @@ const OpenEnded = ({ game }: Props) => {
     mutationFn: async () => {
       let filledAnswer = blankAnswer;
       document.querySelectorAll("#user-blank-input").forEach((input) => {
+        // @ts-expect-error
         filledAnswer = filledAnswer.replace("_____", input.value);
+        // @ts-expect-error
         input.value = "";
       });
       const payload: z.infer<typeof checkAnswerSchema> = {
@@ -72,6 +74,16 @@ const OpenEnded = ({ game }: Props) => {
       return () => clearInterval(interval);
     }
   }, [hasEnded]);
+
+  const memoizedSecondsDisplay = React.useMemo(() => {
+    return (
+      <div className="flex self-start mt-3 text-slate-400">
+        <Timer className="mr-2" />
+        {/* @ts-expect-error */}
+        {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
+      </div>
+    );
+  }, [now, game.timeStarted]);
 
   const handleNext = React.useCallback(() => {
     checkAnswer(undefined, {
@@ -98,6 +110,7 @@ const OpenEnded = ({ game }: Props) => {
       },
     });
   }, [checkAnswer, questionIndex, toast, endGame, game.questions.length]);
+
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.key;
@@ -115,7 +128,8 @@ const OpenEnded = ({ game }: Props) => {
     return (
       <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
-          You Completed in{" "}
+          You Completed in
+          {/* @ts-expect-error */}
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
@@ -140,10 +154,7 @@ const OpenEnded = ({ game }: Props) => {
               {game.topic}
             </span>
           </p>
-          <div className="flex self-start mt-3 text-slate-400">
-            <Timer className="mr-2" />
-            {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
-          </div>
+          {memoizedSecondsDisplay}
         </div>
         <OpenEndedPercentage percentage={averagePercentage} />
       </div>
