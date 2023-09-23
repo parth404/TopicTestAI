@@ -30,11 +30,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import LoadingQuestions from "./LoadingQuestions";
 
-type Props = {};
+type Props = {
+  topicParam: string;
+};
 
 type Input = z.infer<typeof testCreationSchema>;
 
-const TestCreation = (props: Props) => {
+const TestCreation = ({ topicParam }: Props) => {
   const router = useRouter();
 
   const [showLoader, setShowLoader] = React.useState(false);
@@ -55,7 +57,7 @@ const TestCreation = (props: Props) => {
     resolver: zodResolver(testCreationSchema),
     defaultValues: {
       amount: 3,
-      topic: "",
+      topic: topicParam,
       type: "open_ended",
     },
   });
