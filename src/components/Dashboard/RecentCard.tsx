@@ -36,7 +36,7 @@ const RecentCard = async (props: Props) => {
         <CardDescription className="pb-2">
           You have played a total of {games_count} quizzes.
         </CardDescription>
-        <HistoryComponent limit={10} userId={session.user.id} />
+        <HistoryComponent limit={5} userId={session.user.id} />
       </CardContent>
     </Card>
   );
