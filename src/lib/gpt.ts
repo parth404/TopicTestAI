@@ -97,7 +97,7 @@ export async function strict_output(
 
     // check if response is valid json
     try {
-      JSON.parse(res); // It's already valid JSON, return as is
+      JSON.parse(res);
     } catch (error) {
       res = convertToJSONArray(res);
     }
