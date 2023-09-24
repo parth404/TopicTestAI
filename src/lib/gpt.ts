@@ -95,12 +95,12 @@ export async function strict_output(
     // ensure that we don't replace away apostrophes in text
     res = res.replace(/(\w)"(\w)/g, "$1'$2");
 
-    // check if response is valid json
-    try {
-      JSON.parse(res);
-    } catch (error) {
-      res = convertToJSONArray(res);
-    }
+    // // check if response is valid json
+    // try {
+    //   JSON.parse(res);
+    // } catch (error) {
+    //   res = convertToJSONArray(res);
+    // }
 
     if (verbose) {
       console.log(
