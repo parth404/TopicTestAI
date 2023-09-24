@@ -49,6 +49,7 @@ export async function POST(req: Request, res: Response) {
       topic,
       type,
     });
+
     if (type === "mcq") {
       type mcqQuestion = {
         question: string;
